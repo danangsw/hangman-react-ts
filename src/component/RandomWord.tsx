@@ -16,6 +16,12 @@ class RandomWord extends Component {
         });
     };
 
+    handleClick2 = () => {
+        this.setState({
+            word: this.state.word + ' '+ this.genWord()
+        });
+    };
+
     genWord() {
         return words[Math.floor(Math.random() * words.length)];
     }
@@ -25,6 +31,7 @@ class RandomWord extends Component {
         <div>
             <h3>{ this.state.word}</h3>
             <button onClick={this.handleClick}>Random Words (Class)</button>
+            <button onClick={this.handleClick2}>Random Words++ (Class)</button>
         </div>
     );
   }
