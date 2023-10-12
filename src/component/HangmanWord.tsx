@@ -3,7 +3,10 @@ import { Component } from "react";
 class HangmanWord extends Component
 {
     words = 'test';
-    guessedLetters = ['e', 't', 's']
+    guessedLetters = ['e', 't', 'x'];
+    incorrectLetters = this.guessedLetters.filter(
+        letter => !this.words.includes(letter)
+    )
     
     render() { 
         return (<div style={{
