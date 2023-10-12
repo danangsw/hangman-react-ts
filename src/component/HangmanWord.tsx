@@ -2,8 +2,10 @@ import { Component } from "react";
 
 class HangmanWord extends Component
 {
+    words = 'test';
+    guessedLetters = ['e', 't', 's']
+    
     render() { 
-        const words = 'testing';
         return (<div style={{
             display: 'flex',
             gap: '.25em',
@@ -12,9 +14,11 @@ class HangmanWord extends Component
             textTransform: 'uppercase',
             fontFamily: 'monospace'
         }}>
-            {words.split('').map((letter) => (
-                <span style={{ borderBottom: '.1em solid black' }}>
-                    <span style={{ visibility: 'hidden' }}>
+            {this.words.split('').map((letter, index) => (
+                <span style={{ borderBottom: '.1em solid black' }} key={`char-${index}`}>
+                    <span style={{
+                        visibility: this.guessedLetters.includes(letter) ?
+                            'visible': 'hidden' }}>
                         {letter}
                     </span>
                 </span>
