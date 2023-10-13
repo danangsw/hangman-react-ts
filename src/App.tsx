@@ -18,7 +18,7 @@ class App extends Component {
 
   testGuessWord = () => {
     const newWord = generateRandomWord();
-    const guessWordTest = newWord.split('').filter((_, i) => i % 2 === 0);
+    const guessWordTest = newWord.split('').filter((_, i) => i % 2 !== 0);
     const countIncorrect = newWord.split('').filter((e) => !guessWordTest.includes(e)).length
     this.setState({
         word: newWord,
@@ -41,7 +41,7 @@ class App extends Component {
         }}>
         <button onClick={this.testGuessWord}>TEST {this.state.incorrectLetter}</button>
         <HangmanResult />
-        <HangmanDrawing />
+        <HangmanDrawing incorrectLetter={this.state.incorrectLetter} />
         <HangmanWord word={this.state.word} guessedLetters={this.state.guessedLetters} />
         <div style={{ alignSelf: 'stretch' }}>
             <HangmanKeyboard />

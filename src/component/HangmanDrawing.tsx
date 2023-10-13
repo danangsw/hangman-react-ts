@@ -75,20 +75,24 @@ const L_LEG = (
     }}/>
 )
 
-class HangmanDrawing extends Component
+const BODY_PARTS = [HEAD, BODY, R_ARM, L_ARM, R_LEG, L_LEG];
+
+interface HangmanDrawingState { 
+    incorrectLetter: number
+}
+
+class HangmanDrawing extends Component <HangmanDrawingState>
 {
     render() { 
         return (<div style={{ position: 'relative' }}>
-            {HEAD}
-            {BODY}
-            {R_ARM}
-            {L_ARM}
-            {R_LEG}
-            {L_LEG}
+            {
+                BODY_PARTS.filter((_, i) => i < (this.props.incorrectLetter))
+            }
             <div style={{ height: '50px', width: '10px', background: 'black', position: 'absolute', top: 0, right: 0}} />
             <div style={{ height: '10px', width: '200px', background: 'black', marginLeft: '120px'}} />
             <div style={{ height: '400px', width: '10px', background: 'black', marginLeft: '120px'}} />
-            <div style={{height: '10px', width: '250px', background: 'black'}} />
+            <div style={{ height: '10px', width: '250px', background: 'black' }} />
+            <div style={{position: 'absolute', marginLeft: '120px'}}>{ this.props.incorrectLetter}</div>
         </div>);
     }
 }
