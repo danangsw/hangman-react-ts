@@ -90,10 +90,10 @@ class HangmanDrawing extends Component <HangmanDrawingProps>
                 BODY_PARTS.slice(0, this.props.incorrectLetter).map((e, i) => cloneElement(e, {key: i}))
             }
             <div style={{ height: '50px', width: '10px', background: 'black', position: 'absolute', top: 0, right: 0}} />
-            <div style={{ height: '10px', width: '200px', background: 'black', marginLeft: '120px'}} />
-            <div style={{ height: '400px', width: '10px', background: 'black', marginLeft: '120px'}} />
+            <div style={{ height: '10px', width: '200px', background: 'black', marginLeft: '50px'}} />
+            <div style={{ height: '400px', width: '10px', background: 'black', marginLeft: '50px'}} />
             <div style={{ height: '10px', width: '250px', background: 'black' }} />
-            <div style={{position: 'absolute', marginLeft: '120px'}}>{ this.props.incorrectLetter}</div>
+            {/* <div style={{position: 'absolute', marginLeft: '120px'}}>{ this.props.incorrectLetter}</div> */}
         </div>);
     }
 }

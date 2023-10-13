@@ -3,6 +3,7 @@ import { Component } from "react";
 interface HangmanWordProps { 
     word: string,
     guessedLetters: string[],
+    reveal: boolean
 }
 
 class HangmanWord extends Component<HangmanWordProps>
@@ -19,8 +20,9 @@ class HangmanWord extends Component<HangmanWordProps>
             {this.props.word.split('').map((letter, index) => (
                 <span style={{ borderBottom: '.1em solid black' }} key={`char-${index}`}>
                     <span style={{
-                        visibility: this.props.guessedLetters.includes(letter) ?
-                            'visible': 'hidden' }}>
+                        visibility: this.props.guessedLetters.includes(letter) || this.props.reveal ?
+                            'visible' : 'hidden',
+                        color: !this.props.guessedLetters.includes(letter) && this.props.reveal ? 'red' : 'black'}}>
                         {letter}
                     </span>
                 </span>
