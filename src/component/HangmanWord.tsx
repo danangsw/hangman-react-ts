@@ -1,13 +1,12 @@
 import { Component } from "react";
 
-class HangmanWord extends Component
-{
-    words = 'test';
-    guessedLetters = ['e', 't', 'x'];
-    incorrectLetters = this.guessedLetters.filter(
-        letter => !this.words.includes(letter)
-    )
-    
+interface HangmanWordState { 
+    word: string,
+    guessedLetters: string[],
+}
+
+class HangmanWord extends Component<HangmanWordState>
+{   
     render() { 
         return (<div style={{
             display: 'flex',
@@ -17,10 +16,10 @@ class HangmanWord extends Component
             textTransform: 'uppercase',
             fontFamily: 'monospace'
         }}>
-            {this.words.split('').map((letter, index) => (
+            {this.props.word.split('').map((letter, index) => (
                 <span style={{ borderBottom: '.1em solid black' }} key={`char-${index}`}>
                     <span style={{
-                        visibility: this.guessedLetters.includes(letter) ?
+                        visibility: this.props.guessedLetters.includes(letter) ?
                             'visible': 'hidden' }}>
                         {letter}
                     </span>

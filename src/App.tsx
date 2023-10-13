@@ -5,29 +5,28 @@ import HangmanDrawing from './component/HangmanDrawing'
 import HangmanWord from './component/HangmanWord'
 import HangmanKeyboard from './component/HangmanKeyboard'
 
-type HangmanState = {
-  guessWord: string;
-  guessedWords: string[];
+const generateRandomWord = () => { 
+  return words[Math.floor(Math.random() * words.length)];
 }
 
 class App extends Component {
-  state: HangmanState= {
-      guessWord: this.genWord(),
-      guessedWords: []
+  state = {
+      word: generateRandomWord(),
+      guessedLetters: [],
+      incorrectLetter: 0
   };
 
-  guessWord = () => {
+  testGuessWord = () => {
+    const newWord = generateRandomWord();
+    const guessWordTest = newWord.split('').filter((_, i) => i % 2 === 0);
+    const countIncorrect = newWord.split('').filter((e) => !guessWordTest.includes(e)).length
     this.setState({
-        guessWord: this.genWord(),
-        guessedWords: [...this.state.guessedWords, this.state.guessWord]
+        word: newWord,
+      // testing purpose
+        guessedLetters: guessWordTest, 
+        incorrectLetter: countIncorrect
     });
-
-    console.log(this.state.guessWord, this.state.guessedWords);
   };
-
-  genWord() { 
-    return words[Math.floor(Math.random() * words.length)];
-  }
   
   render() {
     return (
@@ -40,10 +39,10 @@ class App extends Component {
           margin: '0 auto',
           alignItems: 'center',
         }}>
-        {/* <button onClick={this.guessWord}>TEST</button> */}
+        <button onClick={this.testGuessWord}>TEST {this.state.incorrectLetter}</button>
         <HangmanResult />
         <HangmanDrawing />
-        <HangmanWord />
+        <HangmanWord word={this.state.word} guessedLetters={this.state.guessedLetters} />
         <div style={{ alignSelf: 'stretch' }}>
             <HangmanKeyboard />
         </div>
