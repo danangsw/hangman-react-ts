@@ -77,11 +77,11 @@ const L_LEG = (
 
 const BODY_PARTS = [HEAD, BODY, R_ARM, L_ARM, R_LEG, L_LEG];
 
-interface HangmanDrawingState { 
+interface HangmanDrawingProps { 
     incorrectLetter: number
 }
 
-class HangmanDrawing extends Component <HangmanDrawingState>
+class HangmanDrawing extends Component <HangmanDrawingProps>
 {
     render() { 
         return (<div style={{ position: 'relative' }}>

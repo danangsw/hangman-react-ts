@@ -1,11 +1,11 @@
 import { Component } from "react";
 
-interface HangmanWordState { 
+interface HangmanWordProps { 
     word: string,
     guessedLetters: string[],
 }
 
-class HangmanWord extends Component<HangmanWordState>
+class HangmanWord extends Component<HangmanWordProps>
 {   
     render() { 
         return (<div style={{

@@ -5,26 +5,33 @@ import HangmanDrawing from './component/HangmanDrawing'
 import HangmanWord from './component/HangmanWord'
 import HangmanKeyboard from './component/HangmanKeyboard'
 
+const MAX_TRY = 6
+const MIN_TRY = 0
+
 const generateRandomWord = () => { 
   return words[Math.floor(Math.random() * words.length)];
 }
 
-type HangmanState = {
-      word: string,
-      guessedLetters: string[],
-      incorrectLetter: number
+type HangmanProps = {
+    word: string,
+    guessedLetters: string[],
+    incorrectLetter: number,
+    isCompleted: boolean,
+    msgDef: string,
   }
 
-class App extends Component<HangmanState> {
-  state: HangmanState;
+class App extends Component<HangmanProps> {
+  state: HangmanProps;
 
-  constructor(props: HangmanState) {
+  constructor(props: HangmanProps) {
     super(props);
     this.keyboardHandler = this.keyboardHandler.bind(this);
     this.state = {
       word: generateRandomWord(),
       guessedLetters: [],
-      incorrectLetter: 0
+      incorrectLetter: 0,
+      isCompleted: false,
+      msgDef: "Refresh to start new word."
     };
   }
 
@@ -47,15 +54,45 @@ class App extends Component<HangmanState> {
   }
 
   addGuessLetter = (letter:string) => { 
-    if (this.state.guessedLetters.includes(letter)) return;
-    
+    if (this.state.guessedLetters.includes(letter) || this.state.isCompleted) return;
+
     const newGuessedLetters = [...this.state.guessedLetters, letter];
     this.setState({
       guessedLetters: newGuessedLetters,
       incorrectLetter: newGuessedLetters.filter((letter) => !this.state.word.includes(letter)).length
     })
+
+    this.getMsgResult();
   }
 
+  getMsgResult() { 
+      if (this.state.incorrectLetter >= MAX_TRY) { 
+        this.setState({
+          isCompleted: true,
+          msgDef: "Nice Try! - Refresh to try it again." + this.state.incorrectLetter
+        })
+
+        return;
+      }
+
+      if (this.state.word.split('').every(letter => this.state.guessedLetters.includes(letter))
+        && this.state.guessedLetters.length > MIN_TRY) {
+        this.setState({
+          isCompleted: true,
+          msgDef: "Winner! - Refresh to try it again."
+        })
+
+        return;
+      }
+
+      this.setState({
+        isCompleted: false
+      })
+      
+      return;
+  }
+
+  // testing purpose
   testGuessWord = () => {
     const newWord = generateRandomWord();
     const guessWordTest = newWord.split('').filter((_, i) => i % 2 !== 0);
@@ -79,11 +116,18 @@ class App extends Component<HangmanState> {
           margin: '0 auto',
           alignItems: 'center',
         }}>
-        <button onClick={this.testGuessWord}>TEST {this.state.incorrectLetter}</button>
-        <HangmanResult />
+        {/* <button onClick={this.testGuessWord}>TEST {this.state.incorrectLetter}</button> */}
+        <HangmanResult
+          msgDef={ this.state.msgDef }
+        />
         <HangmanDrawing incorrectLetter={this.state.incorrectLetter} />
         <HangmanWord word={this.state.word} guessedLetters={this.state.guessedLetters} />
-        <HangmanKeyboard />
+        <HangmanKeyboard
+          isCompleted={ this.state.isCompleted}
+          activeLetters={this.state.guessedLetters.filter(letter => this.state.word.includes(letter))}
+          inactiveLetters={this.state.guessedLetters.filter(letter => !this.state.word.includes(letter))}
+          addGuessedLetter={this.addGuessLetter}
+        />
       </div>
     );
   }
