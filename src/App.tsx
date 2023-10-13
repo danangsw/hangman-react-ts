@@ -9,12 +9,52 @@ const generateRandomWord = () => {
   return words[Math.floor(Math.random() * words.length)];
 }
 
-class App extends Component {
-  state = {
+type HangmanState = {
+      word: string,
+      guessedLetters: string[],
+      incorrectLetter: number
+  }
+
+class App extends Component<HangmanState> {
+  state: HangmanState;
+
+  constructor(props: HangmanState) {
+    super(props);
+    this.keyboardHandler = this.keyboardHandler.bind(this);
+    this.state = {
       word: generateRandomWord(),
       guessedLetters: [],
       incorrectLetter: 0
-  };
+    };
+  }
+
+  keyboardHandler(e: KeyboardEvent) { 
+      const key = e.key;
+
+      if (!key.match(/^[a-z]$/)) return
+
+      e.preventDefault();
+
+      this.addGuessLetter(key);
+  }
+
+  componentDidMount(): void {
+    document.addEventListener('keypress', this.keyboardHandler);
+  }
+
+  componentWillUnmount(): void {
+     document.removeEventListener('keypress', this.keyboardHandler);
+  }
+
+  addGuessLetter = (letter:string) => { 
+    if (this.state.guessedLetters.includes(letter)) return;
+    
+    const newGuessedLetters = [...this.state.guessedLetters, letter];
+    this.setState({
+      guessedLetters: newGuessedLetters,
+      incorrectLetter: newGuessedLetters.filter((letter) => !this.state.word.includes(letter)).length
+    })
+  }
 
   testGuessWord = () => {
     const newWord = generateRandomWord();
@@ -43,9 +83,7 @@ class App extends Component {
         <HangmanResult />
         <HangmanDrawing incorrectLetter={this.state.incorrectLetter} />
         <HangmanWord word={this.state.word} guessedLetters={this.state.guessedLetters} />
-        <div style={{ alignSelf: 'stretch' }}>
-            <HangmanKeyboard />
-        </div>
+        <HangmanKeyboard />
       </div>
     );
   }

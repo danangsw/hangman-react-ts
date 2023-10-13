@@ -6,17 +6,20 @@ const KEYS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', '
 class HangmanKeyboard extends Component
 {
     render() { 
-        return (<div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(75px, 1fr))',
-            gap: '.5rem',
-        }}>
-            {KEYS.map(key => { 
-                return (
-                    <button className='btn' key={`key-${key}`}
-                    >{key}</button>
-                )
-            })}
+        return (
+        <div style={{ alignSelf: 'stretch' }}>
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(75px, 1fr))',
+                gap: '.5rem',
+            }}>
+                {KEYS.map(key => { 
+                    return (
+                        <button className='btn' key={`key-${key}`}
+                        >{key}</button>
+                    )
+                })}
+            </div>
         </div>);
     }
 }

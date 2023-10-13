@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component, cloneElement } from "react";
 
 const HEAD = (
     <div style={{
@@ -86,7 +86,8 @@ class HangmanDrawing extends Component <HangmanDrawingState>
     render() { 
         return (<div style={{ position: 'relative' }}>
             {
-                BODY_PARTS.filter((_, i) => i < (this.props.incorrectLetter))
+                //If you want to add a key to a React JSX Element after it’s instantiated, you can use React.cloneElement
+                BODY_PARTS.slice(0, this.props.incorrectLetter).map((e, i) => cloneElement(e, {key: i}))
             }
             <div style={{ height: '50px', width: '10px', background: 'black', position: 'absolute', top: 0, right: 0}} />
             <div style={{ height: '10px', width: '200px', background: 'black', marginLeft: '120px'}} />
