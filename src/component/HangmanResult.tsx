@@ -5,6 +5,10 @@ interface HangmanResultProps {
 
 class HangmanResult extends Component<HangmanResultProps>
 {
+    constructor(props: HangmanResultProps) {
+        super(props);
+    }
+
     render() { 
         return (
             <div style={{ fontSize: '2em', textAlign: 'center' }}>

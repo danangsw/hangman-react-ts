@@ -12,27 +12,30 @@ const generateRandomWord = () => {
   return words[Math.floor(Math.random() * words.length)];
 }
 
-type HangmanProps = {
+interface HangmanState {
     word: string,
     guessedLetters: string[],
-    incorrectLetter: number
-  }
+    incorrectLetter: number,
+    isCompleted: boolean,
+    msgDef: string,
+}
 
-class App extends Component<HangmanProps> {
-  state: HangmanProps;
-  isCompleted: boolean;
-  msgDef: string;
+interface HangmanProps {
+}
 
+class App extends Component<HangmanProps, HangmanState> {
   constructor(props: HangmanProps) {
     super(props);
-    this.keyboardHandler = this.keyboardHandler.bind(this);
+
     this.state = {
       word: generateRandomWord(),
       guessedLetters: [],
-      incorrectLetter: 0
-    };
-    this.isCompleted = false;
-    this.msgDef = "Refresh to try it again."
+      incorrectLetter: 0,
+      isCompleted: false,
+      msgDef: "Refresh (press Enter) to try it again.",
+    }
+
+    this.keyboardHandler = this.keyboardHandler.bind(this);
   }
 
   keyboardHandler(e: KeyboardEvent) { 
@@ -40,7 +43,9 @@ class App extends Component<HangmanProps> {
 
     e.preventDefault();
 
-    if (!key.match(/^[a-z]$/)) return
+    if (key === 'Enter') this.resetGuessWord();
+
+    if (!key.match(/^[a-z]$/)) return;
 
     this.addGuessLetter(key);
   }
@@ -53,11 +58,17 @@ class App extends Component<HangmanProps> {
      document.removeEventListener('keypress', this.keyboardHandler);
   }
 
+  componentDidUpdate(prevProps: HangmanState, prevState: HangmanState): void {
+    if (prevState.guessedLetters !== this.state.guessedLetters)
+    {
+      this.getMsgResult();
+    }
+  }
+
   addGuessLetter = (letter:string) => { 
-    if (this.state.guessedLetters.includes(letter) || this.isCompleted) return;
+    if (this.state.guessedLetters.includes(letter) || this.state.isCompleted) return;
 
     const newGuessedLetters = [...this.state.guessedLetters, letter];
-    this.getMsgResult();
     
     this.setState({
       guessedLetters: newGuessedLetters,
@@ -66,43 +77,40 @@ class App extends Component<HangmanProps> {
   }
 
   getMsgResult() { 
-      if (this.state.incorrectLetter >= MAX_TRY) { 
-        this.isCompleted = true;
-        this.msgDef = "Nice Try! - Refresh to try it again."; // + this.state.incorrectLetter;
+    let isCompleted: boolean, msgDef: string;
 
-        return;
-      }
+    if (this.state.incorrectLetter >= MAX_TRY) {
+      isCompleted = true;
+      msgDef = "Nice Try! - Refresh (press Enter) to try it again."; // + this.state.incorrectLetter;
+    }
+    else if (this.state.word.split('').every(letter => this.state.guessedLetters.includes(letter))
+      && this.state.guessedLetters.length > MIN_TRY) {
+      isCompleted = true;
+      msgDef = "Winner! - Refresh (press Enter) to try it again.";
+    }
+    else { 
+      isCompleted = false;
+      msgDef = "Refresh (press Enter) to try it again.";
+    }
 
-      if (this.state.word.split('').every(letter => this.state.guessedLetters.includes(letter))
-        && this.state.guessedLetters.length > MIN_TRY) {
-        this.isCompleted=true;
-        this.msgDef= "Winner! - Refresh to try it again.";
-
-        return;
-      }
-
-      this.isCompleted=false
-      return;
+    this.setState({
+      isCompleted: isCompleted,
+      msgDef: msgDef
+    })
   }
 
   // testing purpose
   resetGuessWord = () => {
-    const newWord = generateRandomWord();
-    // const guessWordTest = newWord.split('').filter((_, i) => i % 2 !== 0);
-    // const countIncorrect = newWord.split('').filter((e) => !guessWordTest.includes(e)).length
     this.setState({
-        word: newWord,
-        guessedLetters: [], 
-        incorrectLetter: 0
+      word: generateRandomWord(),
+      guessedLetters: [],
+      incorrectLetter: 0,
+      isCompleted: false,
+      msgDef: "Refresh (press Enter) to try it again.",
     });
-
-    this.isCompleted = false;
-    this.msgDef = "Refresh to try it again."
   };
   
   render() {
-    this.getMsgResult();
-
     return (
       <div
         style={{
@@ -113,18 +121,18 @@ class App extends Component<HangmanProps> {
           margin: '0 auto',
           alignItems: 'center',
         }}>
-        <button onClick={this.resetGuessWord}>REFRESH</button>
+        <button onClick={this.resetGuessWord}>REFRESH (Press Enter)</button>
         <HangmanResult
-          msgDef={ this.msgDef }
+          msgDef={ this.state.msgDef }
         />
         <HangmanDrawing incorrectLetter={this.state.incorrectLetter} />
         <HangmanWord
           word={this.state.word}
           guessedLetters={this.state.guessedLetters}
-          reveal={this.isCompleted}
+          reveal={this.state.isCompleted}
         />
         <HangmanKeyboard
-          isCompleted={ this.isCompleted}
+          isCompleted={ this.state.isCompleted}
           activeLetters={this.state.guessedLetters.filter(letter => this.state.word.includes(letter))}
           inactiveLetters={this.state.guessedLetters.filter(letter => !this.state.word.includes(letter))}
           addGuessedLetter={this.addGuessLetter}

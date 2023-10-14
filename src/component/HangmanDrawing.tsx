@@ -83,6 +83,10 @@ interface HangmanDrawingProps {
 
 class HangmanDrawing extends Component <HangmanDrawingProps>
 {
+    constructor(props: HangmanDrawingProps) {
+        super(props);
+    }
+    
     render() { 
         return (<div style={{ position: 'relative' }}>
             {

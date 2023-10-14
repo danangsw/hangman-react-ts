@@ -8,6 +8,10 @@ interface HangmanWordProps {
 
 class HangmanWord extends Component<HangmanWordProps>
 {   
+    constructor(props: HangmanWordProps) {
+        super(props);
+    }
+
     render() { 
         return (<div style={{
             display: 'flex',
